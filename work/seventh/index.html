@@ -34,6 +34,49 @@
       // .data() 要素のdata属性を取得します。
       // .width() 要素の幅を取得します。
       // .length 要素の個数を取得します。
+
+      // $(function() {
+      //   $('.slider-ctrl-btn').click(function() {
+      //     var imgWidth = $('.slider-list li').width(); 
+      //     var imgLength = $('.slider-list li').length;
+      //     var imgSetWidth = imgWidth * imgLength;
+      //     $('.slider-list').css('width' , imgSetWidth);
+
+      //     $('.slider-list').animate({
+      //       left: -imgWidth
+      //     });
+      //   });
+      // });
+
+    $(function() {
+      var imgWidth = $('.slider-list li').width(); 
+      var imgLength = $('.slider-list li').length;
+      var imgSetWidth = imgWidth * imgLength;
+      var currentLocation = 0;
+
+      var pictureSlide = function() {
+        if(currentLocation < 0) {
+          currentLocation = imgLength - 1;
+        } else if(currentLocation > imgLength -1) {
+          currentLocation = 0;
+        }
+
+
+        $('.slider-list').animate({
+          left: currentLocation * -imgWidth
+        });
+      }
+
+      $('.is-prev').click(function() {
+        currentLocation--;
+        pictureSlide();
+      });
+
+      $('.is-next').click(function() {
+        currentLocation++;
+        pictureSlide();
+      })
+    });
     </script>
   </body>
 </html>
