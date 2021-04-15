@@ -52,12 +52,12 @@
           $('ul').html(pager);
           $('.counter-current').text(currentPage);
           $('.counter-current').after('/'); 
-
+          
           $('.btn-item').on('click', function(e) {
             e.preventDefault(); 
-            currentPage++
+            currentPage++;
+            $('ul').empty();
             ajax(currentPage);
-            console.log(currentPage);
           });
         });
 
@@ -72,7 +72,7 @@
               booksGenreId: '001',
               keyword: searchWord,
               hits: 20,
-              page: page
+              page: page,
             },
             }).done(function(data) {
             $.each(data.Items, function(index, item) {
