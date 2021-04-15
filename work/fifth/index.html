@@ -101,13 +101,13 @@
         $('.select').change(function(){
           var language = $(this).val();
           if(language === 'all'){
-            $('.list').children('li').show();
+            $('.list').children().show();
           } else {
-            $('.list').children('li').each(function(index, listLanguage){
-              if($(listLanguage).data('category-type') === language) {
-                $(listLanguage).show();
+            $('.list').children().each(function(index, list){
+              if($(list).data('category-type') === language) {
+                $(list).show();
               } else {
-                $(listLanguage).hide();
+                $(list).hide();
               }
             })
           }
