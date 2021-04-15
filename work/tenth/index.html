@@ -46,19 +46,7 @@
         $('.search__btn').on('click', function() {
           var currentPage = 1;
           ajax(currentPage);
-          var pager = 
-          $('<div class="pager" data-js="pager">' + '<div class="counter">' + '<span class="counter-current"></span>' + '<span class="counter-all"></span>' + '</div>' + '<div class="btn-wrapper">' + '<a class="btn-item" data-js="page-prev" href="">前へ</a>' + '<a class="btn-item" data-js="page-next" href="">次へ</a>' + '</div>' + '</div>'); 
-
-          $('ul').html(pager);
-          $('.counter-current').text(currentPage);
-          $('.counter-current').after('/'); 
-          
-          $('.btn-item').on('click', function(e) {
-            e.preventDefault(); 
-            currentPage++;
-            $('ul').empty();
-            ajax(currentPage);
-          });
+          addPager();
         });
 
         var ajax = function(page){
@@ -75,6 +63,15 @@
               page: page,
             },
             }).done(function(data) {
+              $('.btn-item').on('click', function(e) {
+              e.preventDefault(); 
+              page++;
+              $('ul').empty();
+              ajax(page);
+              addPager();
+              $('.counter-current').text(page);
+              $('.counter-current').after('/'); 
+             });
             $.each(data.Items, function(index, item) {
               var list = 
               $('<li class="lists__item">' + '<div class="lists__item__inner">' + 
@@ -83,6 +80,12 @@
                 $('ul').prepend(list);
             })
           })
+        };
+
+        var addPager = function() {
+          var pager = 
+          $('<div class="pager" data-js="pager">' + '<div class="counter">' + '<span class="counter-current"></span>' + '<span class="counter-all"></span>' + '</div>' + '<div class="btn-wrapper">' + '<a class="btn-item" data-js="page-prev" href="">前へ</a>' + '<a class="btn-item" data-js="page-next" href="">次へ</a>' + '</div>' + '</div>'); 
+          $('ul').html(pager);
         };
 
         //
