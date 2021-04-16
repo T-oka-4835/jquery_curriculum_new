@@ -28,17 +28,11 @@
     <script src="../../common/js/jquery.js"></script>
     <script src="./js/appid.js"></script>
     <script>
-      //
-      // 下記URLにAPIの仕様が載っているので、ブラウザで開いて参考にしてください。
-      // https://webservice.rakuten.co.jp/api/bookstotalsearch/
       $(function() {
         var currentPage = 1;
         var lastPage = 0;
         $('.search__btn').on('click', function() {
             ajax(currentPage);
-            addPager();
-            $('.counter-current').text(currentPage);
-           
         });
 
         var ajax = function(page){
@@ -54,16 +48,17 @@
             hits: 20,
             page: page,
           },
-          }).done(function(data) {
+          }).done(function(data) {   
+            var list = [];    
             $.each(data.Items, function(index, item) {
-            var list = 
-            '<li class="lists__item">' + '<div class="lists__item__inner">' + 
+            list += 
+              '<li class="lists__item">' + '<div class="lists__item__inner">' + 
               '<a href="'+ item.Item.itemUrl +'" class="lists__item__link" target="_blank">' + '<img src="' + item.Item.largeImageUrl + '" class="lists__item__img" alt="">' + '<p class="lists__item__detail">作品名：' + item.Item.title + '</p>' + '<p class="lists__item__detail">作者：' + item.Item.author + '</p>' + '<p class="lists__item__detail">出版社：' + item.Item.publisherName + '</p>' + '</a>' + '</div>' + '</li>';
-
-              $('ul').prepend(list);
-              var lastPage = data.pageCount;
-              $('.counter-all').text(lastPage);
             })
+            $('ul').append(list);
+            lastPage = data.pageCount;
+            $(pager).remove();
+            addPager();
           })
             .fail(function(){
           });
@@ -72,15 +67,13 @@
         $('body').on('click', '.btn-item', function(e) {
           e.preventDefault(); 
           if ($(this).data('js') === 'page-next') {
+            $('ul').empty();
             currentPage++;
-            $('ul').empty();
             ajax(currentPage);
-            addPager();
           } else {
-            currentPage--;
             $('ul').empty();
+            currentPage--;
             ajax(currentPage);
-            addPager();
           }
         });   
 
@@ -89,7 +82,7 @@
 
         var addPager = function() {
           $(pager).remove();
-          $('ul').html(pager);
+          $('ul').append(pager);
           $('.counter-current').text(currentPage);
           $('.counter-current').after('/'); 
           $('.counter-all').text(lastPage);
