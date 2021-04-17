@@ -32,6 +32,10 @@
         var currentPage = 1;
         var lastPage = 0;
         $('.search__btn').on('click', function() {
+          if ($('.search__text__input').val() !== "") {
+            $('ul').empty();
+            $(pager).remove();
+          }
           ajax(currentPage);
         });
 
@@ -93,7 +97,6 @@
             $('.btn-item').addClass('disabled').click(function() {
               return false;
             });
-            $('.btn-item[data-js=page-next]').addClass('disabled');
           } else if (currentPage === 1) {
             $('.btn-item[data-js=page-prev]').addClass('disabled').click(function() {
               return false;
@@ -104,11 +107,6 @@
             });
           } 
         }
-
-
-        // // 取得できた書籍の件数をもとに、ページャを作成しましょう
-        // // ページャの条件
-        // // ├ 1ページ目では「前へ」に、最後のページでは「次へ」にdisabledクラスをつけて非活性（使用不能）にする
       });
     </script>
   </body>
