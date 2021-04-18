@@ -52,6 +52,7 @@
             keyword: searchWord,
             hits: 20,
             page: page,
+            timeout: 1000
           },
           }).done(function(data) {   
             $('.message').empty();
@@ -70,9 +71,18 @@
             $('.message').empty();
             $('.message').append('検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。')
           }
-          })
-            .fail(function(){
-              
+          }).fail(function(jqXHR, textStatus, errorThrown){
+            switch(jqXHR.status) {
+              case 400:
+                $('.message').text('検索文字が入力されていません。');
+                break;
+              case 429: 
+                $('.message').text('リクエスト過多です。しばらく時間を置いてからお試しください。'); 
+                break;
+              case 0:
+                $('.message').text('通信に失敗しました。インターネットの接続をご確認ください。');
+                break;
+            }
           });
         };
 
