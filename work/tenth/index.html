@@ -35,6 +35,7 @@
           if ($('.search__text__input').val() !== "") {
             $('ul').empty();
             $(pager).remove();
+            currentPage = 1;
           }
           ajax(currentPage);
         });
@@ -53,7 +54,9 @@
             page: page,
           },
           }).done(function(data) {   
+            $('.message').empty();
             var list = [];    
+            if(data.Items.length > 0) {
             $.each(data.Items, function(index, item) {
             list += 
               '<li class="lists__item">' + '<div class="lists__item__inner">' + 
@@ -63,8 +66,13 @@
             lastPage = data.pageCount;
             addPager();
             btnCheck();
+          } else {
+            $('.message').empty();
+            $('.message').append('検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。')
+          }
           })
             .fail(function(){
+              
           });
         };
 
