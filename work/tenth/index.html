@@ -46,7 +46,7 @@
         });
 
         // 前へと次へをクリックした際の処理
-        $('body').on('click', '.btn-item', function(e) {
+        $(document).on('click', '.btn-item', function(e) {
           e.preventDefault(); 
           $('ul').empty();
           if ($(this).data('js') === 'page-next') {
@@ -133,17 +133,22 @@
 
         // failの際の条件分岐
         var failSwitch = function(status) {
+          var errorMessage = '';
           switch(status) {
             case 400:
-              $('.message').text('検索文字が入力されていません。');
+              errorMessage = ('検索文字が入力されていません。');
               break;
             case 429: 
-              $('.message').text('リクエスト過多です。しばらく時間を置いてからお試しください。'); 
+              errorMessage = ('リクエスト過多です。しばらく時間を置いてからお試しください。'); 
               break;
             case 0:
-              $('.message').text('通信に失敗しました。インターネットの接続をご確認ください。');
+              errorMessage = ('通信に失敗しました。インターネットの接続をご確認ください。');
+              break;
+            default:
+              errorMessage = ('予期せぬエラーです');
               break;
           }
+          $('.message').text(errorMessage);
         }
       });
     </script>
