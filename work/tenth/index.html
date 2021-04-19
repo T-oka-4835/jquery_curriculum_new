@@ -32,6 +32,7 @@
         // ページの初期値
         var currentPage = 1;
         var lastPage = 0;   
+        var searchWord = '';
 
         // pagerのテンプレート
         var pager = 
@@ -40,26 +41,25 @@
         // searchBtn をクリックした際の処理
         $('.search__btn').on('click', function() {
           searchAgain();
-          ajax(currentPage);
+          searchWord = $('.search__text__input').val();
+          ajax(currentPage, searchWord);
         });
 
         // 前へと次へをクリックした際の処理
         $('body').on('click', '.btn-item', function(e) {
           e.preventDefault(); 
+          $('ul').empty();
           if ($(this).data('js') === 'page-next') {
-            $('ul').empty();
             currentPage++;
-            ajax(currentPage);
           } else {
-            $('ul').empty();
             currentPage--;
-            ajax(currentPage);
           }
+          ajax(currentPage, searchWord);
         });   
 
         // ajaxでの処理
         var ajax = function(page,searchWord){
-          var searchWord = $('.search__text__input').val();
+          $('.message').empty();
           $.ajax({
           url: 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20130522',
           type: 'GET',
@@ -72,13 +72,11 @@
             page: page,
           },
           }).done(function(data) {   
-            $('.message').empty();
             if(data.Items.length > 0) {
               showItems(data)
               addPager();
               btnCheck();
           } else {
-            $('.message').empty();
             $('.message').append('検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。')
           }
           }).fail(function(jqXHR, textStatus, errorThrown){
