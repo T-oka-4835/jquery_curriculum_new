@@ -39,7 +39,7 @@
           '<div class="pager" data-js="pager">' + '<div class="counter">' + '<span class="counter-current"></span>' + '<span class="counter-all"></span>' + '</div>' + '<div class="btn-wrapper">' + '<a class="btn-item" data-js="page-prev" href="">前へ</a>' + '<a class="btn-item" data-js="page-next" href="">次へ</a>' + '</div>' + '</div>'; 
 
         // searchBtn をクリックした際の処理
-        $('.search__btn').on('click', function() {
+        $('[data-js="search-btn"]').on('click', function() {
           searchAgain();
           searchWord = $('.search__text__input').val();
           ajax(currentPage, searchWord);
@@ -79,7 +79,7 @@
           } else {
             $('.message').append('検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。')
           }
-          }).fail(function(jqXHR, textStatus, errorThrown){
+          }).fail(function(jqXHR){
             failSwitch(jqXHR.status);
           });
         };
