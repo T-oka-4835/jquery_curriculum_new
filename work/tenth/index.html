@@ -38,8 +38,8 @@
         $('[data-js="search-btn"]').on('click', function() {
           $('ul').empty();
           currentPage = 1;
-          searchWord = $('.search__text__input').val();
-          ajax(currentPage, searchWord);
+          searchWord = $('[data-js="search-word"]').val();
+          searchBooks(currentPage, searchWord);
         });
 
         // 前へと次へをクリックした際の処理
@@ -54,11 +54,11 @@
           } else {
             currentPage--;
           }
-          ajax(currentPage, searchWord);
+          searchBooks(currentPage, searchWord);
         });   
 
         // ajaxでの処理
-        function ajax(page,searchWord){
+        function searchBooks(page, searchWord){
           $('.message').empty();
           $.ajax({
             url: 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20130522',
@@ -73,14 +73,14 @@
             },
           }).done(function(data) {   
             if(data.Items.length === 0) {
-              $('.message').append('検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。')
+              return $('.message').append('検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。');
             } else {
               showItems(data)
               addPager(data.pageCount);
-              btnCheck(data.pageCount);
+              addDisabled(data.pageCount);
             }
           }).fail(function(jqXHR){
-            failSwitch(jqXHR.status);
+            showError(jqXHR.status);
           });
         };
 
@@ -101,12 +101,13 @@
         };
 
         // disableの付与とbtn-itemをクリックできなくするための処理
-        function btnCheck(lastPage) {
-          if (currentPage === 1 && lastPage === 1) {
-            $('.btn-item').addClass('disabled');
-          } else if (currentPage === 1) {
+        function addDisabled(lastPage) {
+          var firstPage = 1;
+          if (currentPage === firstPage) {
             $('.btn-item[data-js=page-prev]').addClass('disabled');
-          } else if (currentPage === lastPage) {
+          }
+
+          if (currentPage === lastPage) {
             $('.btn-item[data-js=page-next]').addClass('disabled');
           } 
         }
@@ -131,7 +132,7 @@
         }
 
         // failの際の条件分岐
-        function failSwitch(status) {
+        function showError(status) {
           var errorMessage = '';
           switch(status) {
             case 0:
