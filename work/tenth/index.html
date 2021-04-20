@@ -36,7 +36,6 @@
 
         // searchBtn をクリックした際の処理
         $('[data-js="search-btn"]').on('click', function() {
-          $('ul').empty();
           currentPage = 1;
           searchWord = $('[data-js="search-word"]').val();
           searchBooks(currentPage, searchWord);
@@ -48,7 +47,6 @@
           if ($(this).hasClass('disabled')) {
             return false;
           }
-          $('ul').empty();
           if ($(this).data('js') === 'page-next') {
             currentPage++;
           } else {
@@ -59,6 +57,7 @@
 
         // ajaxでの処理
         function searchBooks(page, searchWord){
+          $('ul').empty();
           $('.message').empty();
           $.ajax({
             url: 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20130522',
@@ -73,12 +72,12 @@
             },
           }).done(function(data) {   
             if(data.Items.length === 0) {
-              return $('.message').append('検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。');
-            } else {
-              showItems(data)
-              addPager(data.pageCount);
-              addDisabled(data.pageCount);
-            }
+              $('.message').append('検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。');
+              return false;
+            } 
+            showItems(data)
+            addPager(data.pageCount);
+            addDisabled(data.pageCount);
           }).fail(function(jqXHR){
             showError(jqXHR.status);
           });
@@ -102,8 +101,8 @@
 
         // disableの付与とbtn-itemをクリックできなくするための処理
         function addDisabled(lastPage) {
-          var firstPage = 1;
-          if (currentPage === firstPage) {
+          var FIRSTPAGE = 1;
+          if (currentPage === FIRSTPAGE) {
             $('.btn-item[data-js=page-prev]').addClass('disabled');
           }
 
@@ -115,15 +114,15 @@
         // 検索にヒットした本を表示する処理
         function showItems(book) {
           var list = '';   
-          $.each(book.Items, function(index, item) {
+          $.each(book.Items, function(index, publication) {
             list += 
               '<li class="lists__item">' + 
                 '<div class="lists__item__inner">' + 
-                  '<a href="'+ item.Item.itemUrl +'" class="lists__item__link" target="_blank">' + 
-                    '<img src="' + item.Item.largeImageUrl + '" class="lists__item__img" alt="">' + 
-                    '<p class="lists__item__detail">作品名：' + item.Item.title + '</p>' + 
-                    '<p class="lists__item__detail">作者：' + item.Item.author + '</p>' + 
-                    '<p class="lists__item__detail">出版社：' + item.Item.publisherName + '</p>' + 
+                  '<a href="'+ publication.Item.itemUrl +'" class="lists__item__link" target="_blank">' + 
+                    '<img src="' + publication.Item.largeImageUrl + '" class="lists__item__img" alt="">' + 
+                    '<p class="lists__item__detail">作品名：' + publication.Item.title + '</p>' + 
+                    '<p class="lists__item__detail">作者：' + publication.Item.author + '</p>' + 
+                    '<p class="lists__item__detail">出版社：' + publication.Item.publisherName + '</p>' + 
                   '</a>' + 
                 '</div>' + 
               '</li>';
